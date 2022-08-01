@@ -1,0 +1,29 @@
+{
+	"sensors":	[
+	
+	
+	{
+		"sensorID": "0",
+		"sensorName": "Sensor 1",
+		"sensorLocation": "Sensor Location 1",
+		"sensorType": "BME280",
+		"sensorAPIKey": "yourAPIKey"
+		
+	},
+	{
+		"sensorID": "1",
+		"sensorName": "Sensor 2",
+		"sensorLocation": "Sensor Location 2",
+		"sensorType": "BME280",
+		"sensorAPIKey": "yourAPIKey"
+	},
+	{
+		"sensorID": "2",
+		"sensorName": "Sensor 3",
+		"sensorLocation": "Sensor Location 3",
+		"sensorType": "BME280",
+		"sensorAPIKey": "yourAPIKey"
+	}
+	],
+	"numberOfSensors": 3
+}

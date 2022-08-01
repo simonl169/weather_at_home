@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simon's Wetterstation</title>
+</head>
+<body>
+   <h1>Übersicht der Sensoren</h1>
+   {% for sensor_x in list_of_sensors %} 
+   <h1>{{ sensor_x.sensorName }} : Temperatur = {{ sensor_x.live_temp }} , Update am: {{sensor_x.last_update }}</h1>
+   {% endfor %}
+</body>
+</html>
