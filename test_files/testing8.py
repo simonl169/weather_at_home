@@ -2,16 +2,13 @@ import json
 import pandas as pd
 
 
-a = 5
-b = 6
+from datetime import datetime
+from datetime import timedelta
 
-c = a+b
+now = datetime.now()
+aa = now.strftime("%Y-%m-%d")
 
-print(a)
-print(b)
-print(c)
-
-
-print('Hello World!')
-
-
+bb = datetime.now() + timedelta(days = 0.5)
+bb = bb.strftime("%Y-%m-%d, %H:%M:%S")
+print(aa)
+print(bb)

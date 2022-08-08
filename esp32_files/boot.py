@@ -3,6 +3,7 @@
 #esp.osdebug(None)
 #import webrepl
 #webrepl.start()
-import test5
 
+
+import test5
 test5.main()

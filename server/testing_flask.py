@@ -7,6 +7,11 @@ import plotly.express as px
 import plotly
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
+from os.path import exists
+from datetime import datetime
+from datetime import timedelta
+
+
 
 
 os.chdir('/home/pi/coding/weather')
@@ -29,9 +34,21 @@ class live():
         self.sensorLocation = sensor_data['sensorLocation']
         self.sensorType = sensor_data['sensorType']
         self.sensorAPIKey = sensor_data['sensorAPIKey']
-        f = open("%s.txt"% self.sensorName, "w")
-        f.write("Time \t Temperature \t Humidity \t Pressure \n")
-        f.close()
+        
+        if exists("%s.txt"% self.sensorName):
+            f = open("%s.txt"% self.sensorName, "a")    
+            f.write("\n")
+            f.close()
+            print("File already there, just appending")
+        else:
+            f = open("%s.txt"% self.sensorName, "w")
+            f.write("Time \t Temperature \t Humidity \t Pressure \n")
+            f.close()
+            print("File not existing, create new...")
+        
+        
+        
+
 
 def convert_json_to_class(data):
     sensors = [0 for id in range(len(data['sensors']))]
@@ -100,22 +117,35 @@ def details(id):
     return render_template('sensor_detail.html', sensor_x = sensor_x) 
     
     
-@app.route('/history')
-def history():
-    filename = "%s.txt"% sensors_tuple[0].sensorName
+@app.route('/history/<id>')
+def history(id):
+
+    id = int(id)
+    filename = "%s.txt"% sensors_tuple[id].sensorName
     #print(filename)
-    
+    now = datetime.now() + timedelta(days = 1)
+    today_string = now.strftime("%Y-%m-%d")
+    three_days_ago = datetime.now() + timedelta(days = -3)
+    start_string = three_days_ago.strftime("%Y-%m-%d")
 
     data = pd.read_csv(filename, sep="\t", header=0)
     data.columns = ["Time", "Temperature", "Humidity", "Pressure"]
     
-    fig = px.line(data, x="Time", y="Temperature", title="Temperatur", markers=True) 
+    fig = px.line(data, x="Time", y="Temperature", title="Temperatur", markers=True)
+    
+    start_date = start_string
+    end_date = today_string
+    fig.update_xaxes(type="date", range=[start_date, end_date])
+    
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     
     fig2 = px.line(data, x="Time", y="Humidity", title="Rel. Luftfeuchtigkeit", markers=True) 
     graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     
-    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2)     
+    fig3 = px.line(data, x="Time", y="Pressure", title="Pressure", markers=True) 
+    graphJSON3 = json.dumps(fig3, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3)     
 
 if __name__ == '__main__':
 
