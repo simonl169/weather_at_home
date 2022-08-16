@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import pandas as pd
 import plotly.express as px
 import plotly
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, session, make_response
 import os
 from os.path import exists
 from datetime import datetime
@@ -73,7 +73,8 @@ sensors_tuple = convert_json_to_class(data)
       
         
 @app.route('/')
-def hello():
+@app.route('/index')
+def index():
     #print(sensors_tuple[0].sensorLocation)
     
     #return 'Hello world'
@@ -131,23 +132,88 @@ def history(id):
     data = pd.read_csv(filename, sep="\t", header=0)
     data.columns = ["Time", "Temperature", "Humidity", "Pressure"]
     
-    fig = px.line(data, x="Time", y="Temperature", title="Temperatur", markers=True)
-    
     start_date = start_string
     end_date = today_string
-    fig.update_xaxes(type="date", range=[start_date, end_date])
     
+    
+    fig = px.line(data, x="Time", y="Temperature", title="Temperatur", markers=True)
+    fig.update_layout(paper_bgcolor="#212121", font=dict(size=18, color="#dcdcdc"))
+    fig.update_xaxes(type="date", range=[start_date, end_date])
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     
-    fig2 = px.line(data, x="Time", y="Humidity", title="Rel. Luftfeuchtigkeit", markers=True) 
+    
+    fig2 = px.line(data, x="Time", y="Humidity", title="Rel. Luftfeuchtigkeit", markers=True)
+    fig2.update_layout(paper_bgcolor="#212121", font=dict(size=18, color="#dcdcdc"))    
+    fig2.update_xaxes(type="date", range=[start_date, end_date])
     graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     
+    
     fig3 = px.line(data, x="Time", y="Pressure", title="Pressure", markers=True) 
+    fig3.update_layout(paper_bgcolor="#212121", font=dict(size=18, color="#dcdcdc"))
+    fig3.update_xaxes(type="date", range=[start_date, end_date])
     graphJSON3 = json.dumps(fig3, cls=plotly.utils.PlotlyJSONEncoder)
     
-    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3)     
+    print(request.args.get("current_page"))
+    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3)   
+
+
+
+@app.route('/get_info', methods=['GET'])
+def get_info():
+    content_type = request.headers.get('method')
+    print(content_type)
+    
+    #id = int(id)
+    id = 0
+    filename = "%s.txt"% sensors_tuple[id].sensorName
+    data = pd.read_csv(filename, sep="\t", header=0)
+    data.columns = ["Time", "Temperature", "Humidity", "Pressure"]
+    
+    data2 = data.tail(1)
+   
+    
+    
+    response = app.response_class(
+        response=data2.to_json( orient="values", lines=False),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+    
+
+@app.route('/get_date', methods=['GET'])
+def get_date():
+    now = datetime.now()
+    today_string_date = now.strftime("%Y-%m-%d")
+    
+    
+    response = app.response_class(
+        response=today_string_date,
+        status=200,
+        mimetype='text/plain'
+    )
+    return response
+    
+@app.route('/get_time', methods=['GET'])
+def get_time():
+    now = datetime.now()
+    today_string_time = now.strftime("%H:%M:%S")
+    
+    
+    response = app.response_class(
+        response=today_string_time,
+        status=200,
+        mimetype='text/plain'
+    )
+    return response
+    
+ 
+    
 
 if __name__ == '__main__':
 
     
     app.run(host='192.168.42.209')
+    
+    
+    

@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+	<link rel="stylesheet" href= "{{ url_for('static',filename='styles/simple.css') }}">
     <title>Simon's Wetterstation</title>
 </head>
 <body>
-   <h1>Übersicht von {{sensor_x.sensorName }}</h1>
-   <h2>Sensor ID: {{sensor_x.sensorID }}</h2>
-   <h2>Sensor Location: {{sensor_x.sensorLocation }}</h2>
-   <h2>Sensor Typ: {{sensor_x.sensorType }}</h2>
-     
-   
-   <h1>Aktuelle Werte : Temperatur = {{ sensor_x.live_temp }} , Update am: {{sensor_x.last_update }}</h1>
-
+	<h1>Übersicht von {{sensor_x.sensorName }}</h1>
+	<ul>
+	<li>Sensor ID: {{sensor_x.sensorID }}</li>
+	<li>Sensor Location: {{sensor_x.sensorLocation }}</li>
+	<li>Sensor Typ: {{sensor_x.sensorType }}</li>
+	<li>Aktuelle Werte : Temperatur = {{ sensor_x.live_temp }} , Update am: {{sensor_x.last_update }}</li>
+	</ul>
 </body>
 </html>
