@@ -154,8 +154,8 @@ class EPD:
             self.height = epdif.EPD_HEIGHT
         elif (rotate == ROTATE_90):
             self.rotate = ROTATE_90
-            self.width = epdif.EPD_HEIGHT
-            self.height = epdif.EPD_WIDTH
+            self.width = EPD_HEIGHT   # here!!
+            self.height = EPD_WIDTH   # here!!
             print('rotating')
         elif (rotate == ROTATE_180):
             self.rotate = ROTATE_180
@@ -173,7 +173,7 @@ class EPD:
             self.set_absolute_pixel(frame_buffer, x, y, colored)
         elif (self.rotate == ROTATE_90):
             point_temp = x
-            x = epdif.EPD_WIDTH - y
+            x = EPD_WIDTH - y  # here!!
             y = point_temp
             self.set_absolute_pixel(frame_buffer, x, y, colored)
         elif (self.rotate == ROTATE_180):

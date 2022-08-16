@@ -3,3 +3,6 @@
 #esp.osdebug(None)
 #import webrepl
 #webrepl.start()
+
+import display_sensor
+display_sensor.main()

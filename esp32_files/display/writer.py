@@ -81,15 +81,15 @@ class Writer():
             print('Start row = {} col = {}'.format(self._getstate().text_row, self._getstate().text_col))
         self.screenwidth = device.width  # In pixels
         self.screenheight = device.height
-        self.linespacing = device.linespacing
-        self.indentspacing = device.indentspacing
+        self.linespacing = device.linespacing #here
+        self.indentspacing = device.indentspacing #here
         self.bgcolor = 0  # Monochrome background and foreground colors
         self.fgcolor = 1
         self.row_clip = False  # Clip or scroll when screen fullt
         self.col_clip = False  # Clip or new line when row is full
         self.wrap = True  # Word wrap
         self.cpos = 0
-        self.tab = 4
+        self.tab = 4 #here
 
         self.glyph = None  # Current char
         self.char_height = 0
@@ -102,8 +102,8 @@ class Writer():
     def _newline(self):
         s = self._getstate()
         height = self.font.height()
-        s.text_row += height+self.linespacing #+5 ist linienabstand
-        s.text_col = 0+self.indentspacing # +5 ist leerzeichen am anfang
+        s.text_row += height+self.linespacing #+5 ist linienabstand #here
+        s.text_col = 0+self.indentspacing # +5 ist leerzeichen am anfang #here
         margin = self.screenheight - (s.text_row + height)
         y = self.screenheight + margin
         if margin < 0:
@@ -125,7 +125,7 @@ class Writer():
     def height(self):  # Property for consistency with device
         return self.font.height()
 
-    def printstring(self, string, invert=True):
+    def printstring(self, string, invert=True): #here
         # word wrapping. Assumes words separated by single space.
         q = string.split('\n')
         last = len(q) - 1
@@ -204,7 +204,7 @@ class Writer():
                     nspaces = self.tab
                 while nspaces:
                     nspaces -= 1
-                    self._printchar(' ', invert=True, recurse=True) # Change here
+                    self._printchar(' ', invert=True, recurse=True) # Change here #here
                 self.glyph = None  # All done
                 return
 
