@@ -19,7 +19,7 @@ Right now, I have the following working:
 
 ![This is an image](https://github.com/simonl169/weather_at_home/blob/main/docs/temperature_history_exampl.PNG)
 
-<img src="https://github.com/simonl169/weather_at_home/blob/main/docs/IMG_4804.JPEG" width=50% height=50%>
+<img src="https://github.com/simonl169/weather_at_home/blob/main/docs/ePaper_display.JPEG" width=50% height=50%>
 
 
 
