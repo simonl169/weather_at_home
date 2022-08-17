@@ -18,7 +18,7 @@ Right now, I have the following working:
 - ESP32 with wavesahre ePaper display as additional data display
 
 ![This is an image](https://github.com/simonl169/weather_at_home/blob/main/docs/temperature_history_exampl.PNG)
-![This is an image](https://github.com/simonl169/weather_at_home/blob/main/docs/IMG_4804.JPEG)
+![This is an image](https://github.com/simonl169/weather_at_home/blob/main/docs/IMG_4804.JPEG =250x250)
 
 
 
