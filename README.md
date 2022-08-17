@@ -23,7 +23,9 @@ Right now, I have the following working:
 ## What's missing?
 - the docker part
 - a bigger ePaper (have to buy one)
-- clean up code
+- clean up code, more generalization
+- more sophisticated website to display the data
+- store data in a databas (like sqlite), not just plain text files
 - add more physical sensors
 - have some nice housing for the sensors
 - power supply for the sensors (right now running via my old phone charger)
