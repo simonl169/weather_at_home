@@ -30,3 +30,4 @@ Right now, I have the following working:
 - have some nice housing for the sensors
 - power supply for the sensors (right now running via my old phone charger)
 - PCB to fit everything into a housing
+- Phone app?
