@@ -1,2 +1,3 @@
 server/sensors.json
 esp32_files/config.py
+esp32_files/display/config.py

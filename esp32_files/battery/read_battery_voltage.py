@@ -1,8 +1,9 @@
 from machine import Pin, ADC
 from time import sleep
+from machine import deepsleep
 
 
-def read_volatage(GPIO_PIN):
+def read_voltage(GPIO_PIN):
     pot = ADC(Pin(GPIO_PIN))
     pot.atten(ADC.ATTN_11DB)
     #ADC.ATTN_0DB — the full range voltage: 1.2V
@@ -16,15 +17,22 @@ def read_volatage(GPIO_PIN):
     
     return pot_value, volts
 
+def main():
+    print('Running main function')
+    bit_value, volts = read_voltage(34)
+    print(volts)
+    sleep(2)
+    print('Reading voltage done, going to deepsleep')
+    deepsleep(5000)
 
+    
 
 
 if __name__ == '__main__':
-      
-    while True:
-        bit_value, volts = read_volatage(34)
-        print(volts)
-        sleep(0.1)
+    
+    print('Running main function as main') 
+    main()
+        
   
   
   

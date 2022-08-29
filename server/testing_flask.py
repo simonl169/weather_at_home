@@ -26,6 +26,7 @@ class live():
     live_hum = 'not set'
     live_pres = 'not set'
     last_update = 'not set'
+    battery_voltage = 'not set'
     
     def __init__(self, sensor_data):
 
@@ -82,8 +83,9 @@ def index():
     
     
 
-@app.route('/post_json', methods=['POST'])
-def process_json():
+@app.route('/post_json/<id>', methods=['POST'])
+def process_json(id):
+    id = int(id)
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
     
@@ -91,13 +93,14 @@ def process_json():
         api_key_received = json_data['API_KEY']
         
         if api_key_received in (obj.sensorAPIKey for obj in sensors_tuple):
-            sensors_tuple[0].live_temp = json_data['temperature']
-            sensors_tuple[0].live_hum = json_data['humidity']
-            sensors_tuple[0].live_pres = json_data['pressure']        
-            sensors_tuple[0].last_update = strftime("%Y-%m-%d %H:%M:%S")
+            sensors_tuple[id].live_temp = json_data['temperature']
+            sensors_tuple[id].live_hum = json_data['humidity']
+            sensors_tuple[id].live_pres = json_data['pressure']
+            sensors_tuple[id].battery_voltage = json_data['voltage']            
+            sensors_tuple[id].last_update = strftime("%Y-%m-%d %H:%M:%S")
             
-            f = open("%s.txt"% sensors_tuple[0].sensorName, "a")
-            f.write(sensors_tuple[0].last_update + "\t" + sensors_tuple[0].live_temp + "\t" + sensors_tuple[0].live_hum + "\t" + sensors_tuple[0].live_pres + "\n")
+            f = open("%s.txt"% sensors_tuple[id].sensorName, "a")
+            f.write(sensors_tuple[id].last_update + "\t" + sensors_tuple[id].live_temp + "\t" + sensors_tuple[id].live_hum + "\t" + sensors_tuple[id].live_pres + "\t" + sensors_tuple[id].battery_voltage + "\n")
             f.close()
             
             return 'Weather data received and stored'

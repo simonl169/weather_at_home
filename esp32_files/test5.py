@@ -3,10 +3,25 @@ import network
 import time
 import config
 import connect_to_wifi
-from machine import Pin, I2C
+from machine import Pin, I2C, ADC
 from time import sleep
 import bme280
 import machine
+
+
+def read_voltage(GPIO_PIN):
+    pot = ADC(Pin(GPIO_PIN))
+    pot.atten(ADC.ATTN_11DB)
+    #ADC.ATTN_0DB — the full range voltage: 1.2V
+    #ADC.ATTN_2_5DB — the full range voltage: 1.5V
+    #ADC.ATTN_6DB — the full range voltage: 2.0V
+    #ADC.ATTN_11DB Full range: 3.3v
+    
+    pot_value = pot.read()  
+    volts = pot_value*3.3/4095
+    
+    return pot_value, volts
+
 
 
 def main():
@@ -23,6 +38,7 @@ def main():
         temp = bme.temperature
         hum = bme.humidity
         pres = bme.pressure
+        bit_value, volts = read_voltage(34)
     
         temp = temp.replace('C','')
         hum = hum.replace('%','')
@@ -34,8 +50,9 @@ def main():
         print('Temperature: ', temp)
         print('Humidity: ', hum)
         print('Pressure: ', pres)
+        print('3.3V Value: ', volts)
         
-        myobj = {'API_KEY': config.API_KEY, 'sensor_name' : config.SENSOR_NAME, 'sensor_ip' : str(ip), 'sensor_location': config.SENSOR_LOC, 'temperature' : temp, 'humidity' : hum, 'pressure' : pres}
+        myobj = {'API_KEY': config.API_KEY, 'sensor_name' : config.SENSOR_NAME, 'sensor_ip' : str(ip), 'sensor_location': config.SENSOR_LOC, 'temperature' : temp, 'humidity' : hum, 'pressure' : pres, 'volts' : volts}
         
     #r = urequests.post("http://192.168.42.209:8080", json = myobj)
         try:
