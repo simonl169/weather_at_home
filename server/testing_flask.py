@@ -43,7 +43,7 @@ class live():
             print("File already there, just appending")
         else:
             f = open("%s.txt"% self.sensorName, "w")
-            f.write("Time \t Temperature \t Humidity \t Pressure \n")
+            f.write("Time \t Temperature \t Humidity \t Pressure \t Battery\n")
             f.close()
             print("File not existing, create new...")
         
@@ -96,7 +96,7 @@ def process_json(id):
             sensors_tuple[id].live_temp = json_data['temperature']
             sensors_tuple[id].live_hum = json_data['humidity']
             sensors_tuple[id].live_pres = json_data['pressure']
-            sensors_tuple[id].battery_voltage = json_data['voltage']            
+            sensors_tuple[id].battery_voltage = json_data['volts']            
             sensors_tuple[id].last_update = strftime("%Y-%m-%d %H:%M:%S")
             
             f = open("%s.txt"% sensors_tuple[id].sensorName, "a")
@@ -133,7 +133,7 @@ def history(id):
     start_string = three_days_ago.strftime("%Y-%m-%d")
 
     data = pd.read_csv(filename, sep="\t", header=0)
-    data.columns = ["Time", "Temperature", "Humidity", "Pressure"]
+    data.columns = ["Time", "Temperature", "Humidity", "Pressure", "Battery"]
     
     start_date = start_string
     end_date = today_string
@@ -156,8 +156,13 @@ def history(id):
     fig3.update_xaxes(type="date", range=[start_date, end_date])
     graphJSON3 = json.dumps(fig3, cls=plotly.utils.PlotlyJSONEncoder)
     
+    fig4 = px.line(data, x="Time", y="Battery", title="Battery", markers=True) 
+    fig4.update_layout(paper_bgcolor="#212121", font=dict(size=18, color="#dcdcdc"))
+    fig4.update_xaxes(type="date", range=[start_date, end_date])
+    graphJSON4 = json.dumps(fig4, cls=plotly.utils.PlotlyJSONEncoder)
+    
     print(request.args.get("current_page"))
-    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3)   
+    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3, graphJSON4=graphJSON4)   
 
 
 

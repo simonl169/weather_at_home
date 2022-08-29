@@ -30,6 +30,8 @@ def main():
     connect_to_wifi.connect_to_wifi()
     ip = connect_to_wifi.get_network_details()
     print(ip)
+    
+    int_id = config.SENSOR_ID
 
 
     # Making a POST request
@@ -56,7 +58,7 @@ def main():
         
     #r = urequests.post("http://192.168.42.209:8080", json = myobj)
         try:
-            r = urequests.post("http://192.168.42.209:5000/post_json", json = myobj)
+            r = urequests.post("http://192.168.42.209:5000/post_json/0", json = myobj)
             print(r.status_code)
             print(r.content)
         except OSError as e:
