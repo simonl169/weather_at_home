@@ -3,4 +3,3 @@ WIFI_PASSWD = 'yourKey'
 SOME_API_KEY = 'yourapikey'
 SENSOR_NAME = 'Sensor1'
 SENSOR_LOC = 'Location'
-SENSOR_ID = 0

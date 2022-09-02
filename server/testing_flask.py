@@ -26,6 +26,7 @@ class live():
     live_hum = 'not set'
     live_pres = 'not set'
     last_update = 'not set'
+    battery_voltage = 'not set'
     
     def __init__(self, sensor_data):
 
@@ -42,7 +43,7 @@ class live():
             print("File already there, just appending")
         else:
             f = open("%s.txt"% self.sensorName, "w")
-            f.write("Time \t Temperature \t Humidity \t Pressure \n")
+            f.write("Time \t Temperature \t Humidity \t Pressure \t Battery\n")
             f.close()
             print("File not existing, create new...")
         
@@ -82,8 +83,9 @@ def index():
     
     
 
-@app.route('/post_json', methods=['POST'])
-def process_json():
+@app.route('/post_json/<id>', methods=['POST'])
+def process_json(id):
+    id = int(id)
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
     
@@ -91,13 +93,14 @@ def process_json():
         api_key_received = json_data['API_KEY']
         
         if api_key_received in (obj.sensorAPIKey for obj in sensors_tuple):
-            sensors_tuple[0].live_temp = json_data['temperature']
-            sensors_tuple[0].live_hum = json_data['humidity']
-            sensors_tuple[0].live_pres = json_data['pressure']        
-            sensors_tuple[0].last_update = strftime("%Y-%m-%d %H:%M:%S")
+            sensors_tuple[id].live_temp = json_data['temperature']
+            sensors_tuple[id].live_hum = json_data['humidity']
+            sensors_tuple[id].live_pres = json_data['pressure']
+            sensors_tuple[id].battery_voltage = json_data['volts']            
+            sensors_tuple[id].last_update = strftime("%Y-%m-%d %H:%M:%S")
             
-            f = open("%s.txt"% sensors_tuple[0].sensorName, "a")
-            f.write(sensors_tuple[0].last_update + "\t" + sensors_tuple[0].live_temp + "\t" + sensors_tuple[0].live_hum + "\t" + sensors_tuple[0].live_pres + "\n")
+            f = open("%s.txt"% sensors_tuple[id].sensorName, "a")
+            f.write(sensors_tuple[id].last_update + "\t" + sensors_tuple[id].live_temp + "\t" + sensors_tuple[id].live_hum + "\t" + sensors_tuple[id].live_pres + "\t" + sensors_tuple[id].battery_voltage + "\n")
             f.close()
             
             return 'Weather data received and stored'
@@ -130,7 +133,7 @@ def history(id):
     start_string = three_days_ago.strftime("%Y-%m-%d")
 
     data = pd.read_csv(filename, sep="\t", header=0)
-    data.columns = ["Time", "Temperature", "Humidity", "Pressure"]
+    data.columns = ["Time", "Temperature", "Humidity", "Pressure", "Battery"]
     
     start_date = start_string
     end_date = today_string
@@ -153,8 +156,13 @@ def history(id):
     fig3.update_xaxes(type="date", range=[start_date, end_date])
     graphJSON3 = json.dumps(fig3, cls=plotly.utils.PlotlyJSONEncoder)
     
+    fig4 = px.line(data, x="Time", y="Battery", title="Battery", markers=True) 
+    fig4.update_layout(paper_bgcolor="#212121", font=dict(size=18, color="#dcdcdc"))
+    fig4.update_xaxes(type="date", range=[start_date, end_date])
+    graphJSON4 = json.dumps(fig4, cls=plotly.utils.PlotlyJSONEncoder)
+    
     print(request.args.get("current_page"))
-    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3)   
+    return render_template('sensor_history.html', graphJSON=graphJSON, graphJSON2=graphJSON2, graphJSON3=graphJSON3, graphJSON4=graphJSON4)   
 
 
 
