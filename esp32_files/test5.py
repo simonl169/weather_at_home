@@ -54,11 +54,13 @@ def main():
         print('Pressure: ', pres)
         print('3.3V Value: ', volts)
         
-        myobj = {'API_KEY': config.API_KEY, 'sensor_name' : config.SENSOR_NAME, 'sensor_ip' : str(ip), 'sensor_location': config.SENSOR_LOC, 'temperature' : temp, 'humidity' : hum, 'pressure' : pres, 'volts' : volts}
+        myobj = {'API_KEY': config.API_KEY,'SENSOR_ID': config.SENSOR_ID, 'sensor_name' : config.SENSOR_NAME, 'sensor_ip' : str(ip), 'sensor_location': config.SENSOR_LOC, 'temperature' : temp, 'humidity' : hum, 'pressure' : pres, 'volts' : volts}
         
+        request_url = "http://192.168.42.209:5000/post_json/" + str(config.SENSOR_ID)
+        #print(request_url)
     #r = urequests.post("http://192.168.42.209:8080", json = myobj)
         try:
-            r = urequests.post("http://192.168.42.209:5000/post_json/0", json = myobj)
+            r = urequests.post(request_url, json = myobj)
             print(r.status_code)
             print(r.content)
         except OSError as e:
