@@ -43,7 +43,7 @@ while True:
         print(r.status_code)
         print(r.content)
     except OSError as e:
-        print('An error occured: ')
+        print('An error occured 1: ')
         print(e)
     except:
         print('Some other error')
