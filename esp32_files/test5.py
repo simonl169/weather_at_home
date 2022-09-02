@@ -45,6 +45,7 @@ def main():
         temp = temp.replace('C','')
         hum = hum.replace('%','')
         pres = pres.replace('hPa','')
+        volts = str(volts)
         # uncomment for temperature in Fahrenheit
         #temp = (bme.read_temperature()/100) * (9/5) + 32
         #temp = str(round(temp, 2)) + 'F'
