@@ -22,14 +22,16 @@ def read_voltage(GPIO_PIN):
     
     return pot_value, volts
 
-
+def read_status(GPIO_PIN):
+    p2 = Pin(GPIO_PIN, Pin.IN, Pin.PULL_UP)
+    return p2.value()
 
 def main():
     print('Executing weather station')
     i2c = machine.I2C(1, scl=Pin(22), sda=Pin(21), freq=10000)
-    connect_to_wifi.connect_to_wifi()
-    ip = connect_to_wifi.get_network_details()
-    print(ip)
+    #connect_to_wifi.connect_to_wifi()
+    #ip = connect_to_wifi.get_network_details()
+    #print(ip)
     
     int_id = config.SENSOR_ID
 
@@ -40,12 +42,17 @@ def main():
         temp = bme.temperature
         hum = bme.humidity
         pres = bme.pressure
-        bit_value, volts = read_voltage(34)
+        bit_value_33, volts_33 = read_voltage(34)        
+        bit_value_lipo, volts_lipo = read_voltage(35)
+        bit_value_input, volts_input = read_voltage(33)
+        
+        status_charge = read_status(25)
+        status_input = read_status(26)
     
         temp = temp.replace('C','')
         hum = hum.replace('%','')
         pres = pres.replace('hPa','')
-        volts = str(volts)
+        volts = str(volts_33)
         # uncomment for temperature in Fahrenheit
         #temp = (bme.read_temperature()/100) * (9/5) + 32
         #temp = str(round(temp, 2)) + 'F'
@@ -54,12 +61,13 @@ def main():
         print('Humidity: ', hum)
         print('Pressure: ', pres)
         print('3.3V Value: ', volts)
+        print('Status: ', status_charge)
         
-        myobj = {'API_KEY': config.API_KEY,'SENSOR_ID': config.SENSOR_ID, 'sensor_name' : config.SENSOR_NAME, 'sensor_ip' : str(ip), 'sensor_location': config.SENSOR_LOC, 'temperature' : temp, 'humidity' : hum, 'pressure' : pres, 'volts' : volts}
+        #myobj = {'API_KEY': config.API_KEY,'SENSOR_ID': config.SENSOR_ID, 'sensor_name' : config.SENSOR_NAME, 'sensor_ip' : str(ip), 'sensor_location': config.SENSOR_LOC, 'temperature' : temp, 'humidity' : hum, 'pressure' : pres, 'volts' : volts}
         
-        request_url = "http://192.168.42.209:5000/post_json/" + str(config.SENSOR_ID)
+        #request_url = "http://192.168.42.209:5000/post_json/" + str(config.SENSOR_ID)
         #print(request_url)
-    #r = urequests.post("http://192.168.42.209:8080", json = myobj)
+        #r = urequests.post("http://192.168.42.209:8080", json = myobj)
         try:
             r = urequests.post(request_url, json = myobj)
             print(r.status_code)
@@ -72,8 +80,13 @@ def main():
     # check status code for response received
     # success code - 200
 
+        print('Last chance to keep me from sleeping!')
+        time.sleep(2)
 
-        time.sleep(300)
+        print('Im awake, but Im going to sleep..')
+
+        #sleep for 10 seconds (10000 milliseconds).
+        #deepsleep(10000)
 
         #if p>10:
             #break
